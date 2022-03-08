@@ -1,9 +1,11 @@
-class BooksController < ApplicationController
+class Api::V1::BooksController < ApplicationController
   before_action :set_book, only: %i[ show edit update destroy ]
 
   # GET /books or /books.json
   def index
     @books = Book.all
+
+    render json: @books
   end
 
   # GET /books/1 or /books/1.json
