@@ -9,21 +9,10 @@ import axios from "axios";
 // }
 
 function App() {
-  // const [books, setBooks] = useState([]);
-  // useEffect(() => {
-  //   let mounted = true;
-  //   getApiData().then(items => {
-  //     if (mounted) {
-  //       setBooks(items)
-  //     }
-  //   })
-  //   return () => (mounted = false);
-  // }, [])
-
   return (
     <>
       <h1>
-        Hello Clock 1:23:45
+        Hello Rails 7 + Typescript + PSQL
       </h1>
     </>
   )
