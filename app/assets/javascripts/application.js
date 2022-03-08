@@ -3003,11 +3003,11 @@
       if (true) {
         (function() {
           "use strict";
-          var React3 = require_react();
+          var React2 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -3039,7 +3039,7 @@
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
-          if (!React3) {
+          if (!React2) {
             {
               throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
             }
@@ -4255,7 +4255,7 @@
           var didWarnInvalidChild = false;
           function flattenChildren(children) {
             var content = "";
-            React3.Children.forEach(children, function(child) {
+            React2.Children.forEach(children, function(child) {
               if (child == null) {
                 return;
               }
@@ -4266,7 +4266,7 @@
           function validateProps(element, props) {
             {
               if (typeof props.children === "object" && props.children !== null) {
-                React3.Children.forEach(props.children, function(child) {
+                React2.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -11459,7 +11459,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React3.Component().refs;
+          var emptyRefsObject = new React2.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -25456,42 +25456,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   customElements.define("turbo-cable-stream-source", TurboCableStreamSourceElement);
 
   // app/javascript/components/index.jsx
-  var import_react2 = __toESM(require_react());
-  var import_react_dom = __toESM(require_react_dom());
-
-  // app/javascript/components/books.jsx
   var import_react = __toESM(require_react());
-  function Books(props) {
-    return /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("h1", null, " These are API books:"), props.books.map((book) => {
-      return /* @__PURE__ */ import_react.default.createElement("div", {
-        key: book.id
-      }, /* @__PURE__ */ import_react.default.createElement("h2", null, book.title), /* @__PURE__ */ import_react.default.createElement("p", null, book.body));
-    }));
-  }
-  var books_default = Books;
-
-  // app/javascript/components/index.jsx
+  var import_react_dom = __toESM(require_react_dom());
   var import_axios = __toESM(require_axios2());
-  var API_URL = "http://localhost:3000/api/v1/books";
-  function getApiData() {
-    return import_axios.default.get(API_URL).then((response) => response.data);
-  }
   function App() {
-    const [books, setBooks] = (0, import_react2.useState)([]);
-    (0, import_react2.useEffect)(() => {
-      let mounted = true;
-      getApiData().then((items) => {
-        if (mounted) {
-          setBooks(items);
-        }
-      });
-      return () => mounted = false;
-    }, []);
-    return /* @__PURE__ */ import_react2.default.createElement(import_react2.default.Fragment, null, /* @__PURE__ */ import_react2.default.createElement("h1", null, "Hello Clock 1:23:45"), /* @__PURE__ */ import_react2.default.createElement(books_default, {
-      books
-    }));
+    return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("h1", null, "Hello Clock 1:23:45"));
   }
-  import_react_dom.default.render(/* @__PURE__ */ import_react2.default.createElement(App, null), document.getElementById("root"));
+  import_react_dom.default.render(/* @__PURE__ */ import_react.default.createElement(App, null), document.getElementById("root"));
 })();
 /*
 object-assign
