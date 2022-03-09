@@ -24215,7 +24215,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var import_react = __toESM(require_react());
   var import_react_dom = __toESM(require_react_dom());
   function App() {
-    return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("h1", null, "Hello Rails 7 + Typescript + PSQL"));
+    return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("h1", null, "Hello World!"), /* @__PURE__ */ import_react.default.createElement("p", null, "Made with: React + Rails 7 + Typescript + PSQL + GraphQL + Love"));
   }
   import_react_dom.default.render(/* @__PURE__ */ import_react.default.createElement(App, null), document.getElementById("root"));
 })();

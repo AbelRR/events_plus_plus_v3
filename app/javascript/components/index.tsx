@@ -12,8 +12,11 @@ function App() {
   return (
     <>
       <h1>
-        Hello Rails 7 + Typescript + PSQL
+        Hello World!
       </h1>
+      <p>
+        Made with: React + Rails 7 + Typescript + PSQL + GraphQL + Love
+      </p>
     </>
   )
 }
