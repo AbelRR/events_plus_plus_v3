@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_09_031044) do
+ActiveRecord::Schema[7.0].define(version: 2022_03_09_043644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "type", ["none", "bounce_house", "canopy", "heater"]
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.enum "type", default: "none", null: false, enum_type: "type"
+    t.string "description"
+    t.integer "chairs"
+    t.integer "tables"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
