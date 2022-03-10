@@ -1,10 +1,15 @@
 class CreateOrderInventoryItems < ActiveRecord::Migration[7.0]
-  def change
+  def up
     create_table :order_inventory_items do |t|
-      t.references :orders, index: true, foreign_key: true
-      t.references :inventory_items, index: true, foreign_key: true
+      t.belongs_to :order
+      t.belongs_to :inventory_item
 
       t.timestamps null: false
     end
+  end
+  def down
+    execute <<-SQL
+      DROP TABLE order_inventory_items CASCADE;
+    SQL
   end
 end

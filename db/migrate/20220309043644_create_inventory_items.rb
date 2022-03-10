@@ -1,12 +1,13 @@
 class CreateInventoryItems < ActiveRecord::Migration[7.0]
   def up
-    create_enum :inventory_type, ["none", "bounce_house", "canopy", "heater"]
+    create_enum :inventory_item_type, ["none", "bounce_house", "canopy", "heater"]
 
     create_table :inventory_items do |t|
-      t.enum :inventory_type, enum_type: "inventory_type", default: "none", null: false
+      t.enum :inventory_item_type, enum_type: "inventory_item_type", default: "none", null: false
       t.string :description
-      t.integer :chairs
-      t.integer :tables
+      t.integer :chairs, null: false, default: 0
+      t.integer :tables, null: false, default: 0
+
       t.timestamps
     end
   end
@@ -17,7 +18,7 @@ class CreateInventoryItems < ActiveRecord::Migration[7.0]
     drop_table :inventory_items
   
     execute <<-SQL
-      DROP TYPE inventory_type;
+      DROP TYPE inventory_item_type;
     SQL
   end
 end
