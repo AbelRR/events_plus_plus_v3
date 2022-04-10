@@ -3,8 +3,8 @@
 module Types
   class OrderType < Types::BaseObject
     field :id, ID, null: false
-    field :client_id, Integer, null: false
-    field :created_by_id, Integer, null: false
+    field :client, Types::UserType, null: false
+    field :created_by, Types::UserType, null: false
     field :delivery_date_time, String, null: false
     field :return_date_time, String, null: false
     field :location, String, null: false

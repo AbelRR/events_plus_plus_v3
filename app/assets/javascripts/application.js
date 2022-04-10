@@ -1607,7 +1607,7 @@
             }
             return dispatcher.useContext(Context, unstable_observedBits);
           }
-          function useState3(initialState) {
+          function useState2(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -2195,7 +2195,7 @@
           exports.useMemo = useMemo2;
           exports.useReducer = useReducer;
           exports.useRef = useRef2;
-          exports.useState = useState3;
+          exports.useState = useState2;
           exports.version = ReactVersion;
         })();
       }
@@ -24641,7 +24641,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   customElements.define("turbo-cable-stream-source", TurboCableStreamSourceElement);
 
   // app/javascript/components/index.tsx
-  var import_react4 = __toESM(require_react());
+  var react = __toESM(require_react());
   var import_react_dom = __toESM(require_react_dom());
 
   // node_modules/tslib/modules/index.js
@@ -34731,7 +34731,7 @@ const client = new ApolloClient({
   }
 
   // app/javascript/components/graphqlProvider.tsx
-  var import_react3 = __toESM(require_react());
+  var React3 = require_react();
   var csrfToken = document.querySelector("meta[name=csrf-token]").getAttribute("content");
   var client = new ApolloClient({
     link: new HttpLink({
@@ -34743,40 +34743,48 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
   });
   var withProvider = (WrappedComponent, props = {}) => () => {
-    return /* @__PURE__ */ import_react3.default.createElement(ApolloProvider, {
+    return /* @__PURE__ */ React3.createElement(ApolloProvider, {
       client
-    }, /* @__PURE__ */ import_react3.default.createElement(WrappedComponent, {
+    }, /* @__PURE__ */ React3.createElement(WrappedComponent, {
       ...props
     }));
   };
 
   // app/javascript/components/index.tsx
-  var GET_ORDER = lib_default`
-  query Order($id: ID!) {
-    order(id: $id) {
+  var React4 = require_react();
+  var GET_CLIENTS_BY_PHONE_NUMBER = lib_default`
+  query SearchClientsByPhone($partialPhoneNumber: String) {
+    clientsByPhone(partialPhoneNumber: $partialPhoneNumber) {
       id
-      deliveryDateTime
-      inventoryItems {
-        id
-        inventoryItemType
-      }
+      name
+      phoneNumber
     }
   }
 `;
   var App = withProvider(() => {
-    const { data, loading, error } = useQuery(GET_ORDER, {
+    const [phoneInput, setPhoneInput] = React4.useState("");
+    const { data: clientData, loading: clientLoading, error: clientError } = useQuery(GET_CLIENTS_BY_PHONE_NUMBER, {
       variables: {
-        id: 14
+        partialPhoneNumber: phoneInput
       }
     });
-    (0, import_react4.useEffect)(() => {
-      console.log({ data, loading, error });
+    react.useEffect(() => {
+      console.log({ clientData, clientLoading, clientError });
     });
-    return /* @__PURE__ */ import_react4.default.createElement(import_react4.default.Fragment, null, /* @__PURE__ */ import_react4.default.createElement("h1", null, "Hello World!"), /* @__PURE__ */ import_react4.default.createElement("p", null, "Made with: React + Rails 7 + Typescript + PSQL + GraphQL + Love"), /* @__PURE__ */ import_react4.default.createElement("hr", null), /* @__PURE__ */ import_react4.default.createElement("h2", null, "First Order"), data && data.order && data.order.id, data && data.order && "Delivery: " + data.order.deliveryDateTime, data && data.order && data.order.inventoryItems && data.order.inventoryItems.map((item) => {
-      return item.inventoryItemType;
-    }));
+    return /* @__PURE__ */ React4.createElement(React4.Fragment, null, /* @__PURE__ */ React4.createElement("h1", null, "Hello World!"), /* @__PURE__ */ React4.createElement("p", null, "Made with: React + Rails 7 + Typescript + PSQL + GraphQL + Love"), /* @__PURE__ */ React4.createElement("hr", null), /* @__PURE__ */ React4.createElement("input", {
+      type: "tel",
+      onChange: (e) => {
+        setPhoneInput(e.target.value);
+      }
+    }), /* @__PURE__ */ React4.createElement("div", null, !phoneInput && "type client phone number", clientLoading ? "loading client data" : /* @__PURE__ */ React4.createElement("div", null, "Clients found:", clientData.clientsByPhone.map((c) => {
+      return /* @__PURE__ */ React4.createElement("div", {
+        onClick: () => {
+          setPhoneInput(c.phoneNumber);
+        }
+      }, /* @__PURE__ */ React4.createElement("div", null, "Name: ", c.name), /* @__PURE__ */ React4.createElement("div", null, "Phone: ", c.phoneNumber));
+    }))));
   });
-  import_react_dom.default.render(/* @__PURE__ */ import_react4.default.createElement(App, null), document.getElementById("root"));
+  import_react_dom.default.render(/* @__PURE__ */ React4.createElement(App, null), document.getElementById("root"));
 })();
 /*
 object-assign

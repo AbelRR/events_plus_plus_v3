@@ -1,10 +1,10 @@
-import React from 'react'
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   HttpLink,
 } from '@apollo/client'
+import React = require('react')
 
 const csrfToken = document
   .querySelector('meta[name=csrf-token]')

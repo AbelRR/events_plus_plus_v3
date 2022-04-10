@@ -1,12 +1,19 @@
 class CreateInventoryItems < ActiveRecord::Migration[7.0]
   def up
-    create_enum :inventory_item_type, ["none", "bounce_house", "canopy", "heater"]
+    create_enum :item_category, ["item_with_count", "item_with_dimensions"]
 
     create_table :inventory_items do |t|
-      t.enum :inventory_item_type, enum_type: "inventory_item_type", default: "none", null: false
+      t.string :title, null: false
+
+      t.timestamps
+    end
+
+    create_table :inventory_item_details do |t|
+      t.belongs_to :inventory_item, index: { unique: true }, foreign_key: true
+      t.enum :category, enum_type: "item_category", default: "item_with_count", null: false
       t.string :description
-      t.integer :chairs, null: false, default: 0
-      t.integer :tables, null: false, default: 0
+      t.integer :count
+      t.string :dimensions
 
       t.timestamps
     end
@@ -15,10 +22,11 @@ class CreateInventoryItems < ActiveRecord::Migration[7.0]
   # There's no built in support for dropping enums, but you can do it manually.
   # You should first drop any table that depends on them.
   def down
+    drop_table :inventory_item_details
     drop_table :inventory_items
   
     execute <<-SQL
-      DROP TYPE inventory_item_type;
+      DROP TYPE item_category;
     SQL
   end
 end

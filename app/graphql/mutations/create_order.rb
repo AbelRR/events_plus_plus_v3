@@ -37,17 +37,14 @@ module Mutations
         notes: notes,
       )
 
-      list = inventory_item_ids.map do |id|
+      inventory_item_ids.map do |id|
         OrderInventoryItem.create!(
           order_id: order.id,
           inventory_item_id: id,
         ).inventory_item.as_json
       end
 
-      {
-        **order.as_json,
-        inventory_items: list
-      }
+      order
     end
   end
 end

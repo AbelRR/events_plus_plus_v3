@@ -16,14 +16,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_09_054542) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "inventory_item_type", ["none", "bounce_house", "canopy", "heater"]
+  create_enum "item_category", ["item_with_count", "item_with_dimensions"]
   create_enum "user_role", ["admin", "driver", "client"]
 
-  create_table "inventory_items", force: :cascade do |t|
-    t.enum "inventory_item_type", default: "none", null: false, enum_type: "inventory_item_type"
+  create_table "inventory_item_details", force: :cascade do |t|
+    t.bigint "inventory_item_id"
+    t.enum "category", default: "item_with_count", null: false, enum_type: "item_category"
     t.string "description"
-    t.integer "chairs", default: 0, null: false
-    t.integer "tables", default: 0, null: false
+    t.integer "count"
+    t.string "dimensions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_item_id"], name: "index_inventory_item_details_on_inventory_item_id", unique: true
+  end
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.string "title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -33,6 +41,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_09_054542) do
     t.bigint "inventory_item_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["inventory_item_id", "order_id"], name: "order_inventory_items_index", unique: true
     t.index ["inventory_item_id"], name: "index_order_inventory_items_on_inventory_item_id"
     t.index ["order_id"], name: "index_order_inventory_items_on_order_id"
   end
@@ -62,4 +71,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_09_054542) do
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
   end
 
+  add_foreign_key "inventory_item_details", "inventory_items"
 end
