@@ -34771,7 +34771,9 @@ const client = new ApolloClient({
     react.useEffect(() => {
       console.log({ clientData, clientLoading, clientError });
     });
-    return /* @__PURE__ */ React4.createElement(React4.Fragment, null, /* @__PURE__ */ React4.createElement("h1", null, "Hello World!"), /* @__PURE__ */ React4.createElement("p", null, "Made with: React + Rails 7 + Typescript + PSQL + GraphQL + Love"), /* @__PURE__ */ React4.createElement("hr", null), /* @__PURE__ */ React4.createElement("input", {
+    return /* @__PURE__ */ React4.createElement(React4.Fragment, null, /* @__PURE__ */ React4.createElement("h1", {
+      className: "text-2xl"
+    }, "Hello World!"), /* @__PURE__ */ React4.createElement("p", null, "Made with: React + Rails 7 + Typescript + PSQL + GraphQL + Love"), /* @__PURE__ */ React4.createElement("hr", null), /* @__PURE__ */ React4.createElement("input", {
       type: "tel",
       onChange: (e) => {
         setPhoneInput(e.target.value);

@@ -1,4 +1,5 @@
 import * as react from "react";
+import '../../../app/assets/stylesheets/application.css'
 import ReactDOM from "react-dom";
 import gql from 'graphql-tag'
 import {useQuery} from '@apollo/client'
@@ -29,7 +30,7 @@ const App = withProvider(() => {
 
   return (
     <>
-      <h1>
+      <h1 className="text-2xl">
         Hello World!
       </h1>
       <p>
