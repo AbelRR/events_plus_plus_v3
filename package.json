@@ -12,14 +12,16 @@
         "postcss-cli": "^9.1.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-number-format": "^4.9.1",
         "tailwindcss": "^3.0.23"
     },
     "scripts": {
-        "build": "npm run watch:css && esbuild --bundle app/javascript/application.js --outfile=app/assets/javascripts/application.js",
-        "watch": "npm run watch:css && esbuild --watch --bundle app/javascript/application.js  --outfile=app/assets/javascripts/application.js",
-        "watch:css": "postcss app/assets/stylesheets/tailwind.css -o app/assets/stylesheets/application.css"
+        "watch:css": "postcss app/assets/stylesheets/tailwind.css -o app/assets/stylesheets/application.css --watch --verbose",
+        "build": "esbuild --bundle app/javascript/application.js --outfile=app/assets/javascripts/application.js",
+        "watch": "esbuild --watch --bundle app/javascript/application.js  --outfile=app/assets/javascripts/application.js"
     },
     "devDependencies": {
-        "@types/react": "^17.0.40"
+        "@types/react": "^17.0.40",
+        "postcss-import": "^14.1.0"
     }
 }
