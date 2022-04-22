@@ -18,46 +18,30 @@ const GET_CLIENTS_BY_SEARCH_FIELD = gql`
   }
 `;
 
-function PhoneNumberInput({
-  setSearchInput,
-}) {
-
-  return (
-    <div className="px-4">
-      Phone Number:
-      <NumberFormat
-        className="text-black"
-        format="(###) ###-####"
-        allowEmptyFormatting
-        name="phone"
-        mask="_"
-        onChange={(e: { target: { value: any; }; }) => {
-          const { value: maskedValue } = e.target;
-          const plainValue = maskedValue.replace(/\D+/g, '');
-          setSearchInput(plainValue)
-          console.log({ maskedValue, plainValue });
-        }}
-        required
-      />
-    </div>
-  );
-}
-
 const CustomerCard = ({ name, address, phoneNumber }) => {
-  return <div className="p-4 mb-4 bg-blue-200 text-center max-w-sm rounded-lg">
-    <div>
-      Name: {name}
+  return <div className={`
+    flex justify-between md:px-4
+    p-2 md:p-4 mb-2 md:mb-4 w-full text-center 
+    rounded-lg bg-blue-500 font-bold
+  `}>
+    <div className="flex-grow">
+      <div className="text-md md:text-xl">
+        Name: {name}
+      </div>
+      <div className="text-lg md:text-2xl">
+        Phone: {phoneNumber}
+      </div>
+      <div className="text-sm md:text-lg">
+        Address: {address}
+      </div>
     </div>
-    <div>
-      Phone: {phoneNumber}
-    </div>
-    <div>
-      Address: {address}
-    </div>
+    <button className="bg-orange-500 p-2 md:p-8 rounded-xl">
+      Select
+    </button>
   </div>
 }
 
-function CustomerList({ queryField, searchQuery }) {
+const CustomerList = ({ queryField, searchQuery }) => {
   const { data: clientData, loading: clientLoading, error: clientError } = useQuery(GET_CLIENTS_BY_SEARCH_FIELD, {
     variables: {
       searchQuery: searchQuery,
@@ -77,7 +61,6 @@ function CustomerList({ queryField, searchQuery }) {
   if (!clientData) { return <>Loading clients...</> }
   return (
     <div>
-      Clients found:
       {clientData.clientsByField.map(c => {
         return (
           <CustomerCard name={c.name} phoneNumber={c.phoneNumber} address={c.address} />
@@ -88,29 +71,44 @@ function CustomerList({ queryField, searchQuery }) {
 }
 
 const PhoneInput = ({ searchQuery, setSearchInput }) => {
-  return <PhoneNumberInput {...{ searchQuery, setSearchInput }} />
+  return (
+    <div className="px-1">
+      <NumberFormat
+        className="text-2xl md:text-5xl w-full h-full"
+        format="(###) ###-####"
+        allowEmptyFormatting
+        name="phone"
+        mask="_"
+        onChange={(e: { target: { value: any; }; }) => {
+          const { value: maskedValue } = e.target;
+          const plainValue = maskedValue.replace(/\D+/g, '');
+          setSearchInput(plainValue)
+          console.log({ maskedValue, plainValue });
+        }}
+        required
+      />
+    </div>
+  );
 }
 
 const NameInput = ({ searchQuery, setSearchInput }) => {
   return <>
-    Name:
-    <input value={searchQuery} onChange={(e) => setSearchInput(e.target.value)} />
+    <input className="text-2xl md:text-5xl w-full h-full" value={searchQuery} onChange={(e) => setSearchInput(e.target.value)} />
   </>
 
 }
 
 const AddressInput = ({ searchQuery, setSearchInput }) => {
   return <>
-    Address:
-    <input value={searchQuery} onChange={(e) => setSearchInput(e.target.value)} />
+    <input className="text-2xl md:text-5xl w-full h-full" value={searchQuery} onChange={(e) => setSearchInput(e.target.value)} />
   </>
 
 }
 
 const SearchByNavItem = ({ handleOnClick, children, selected }) => {
-  const props = { onClick: handleOnClick, children }
+  const props = { onClick: handleOnClick, children, tabIndex: 0 }
 
-  const sharedClassname = 'order-first md:order-none w-full py-3 text-center self-center'
+  const sharedClassname = 'md:order-none w-full py-2 md:py-3 text-center self-center'
 
   const Standard = () => (
     <i {...props} className={`
@@ -122,6 +120,7 @@ const SearchByNavItem = ({ handleOnClick, children, selected }) => {
   const Selected = () => (
     <i {...props} className={`
       ${sharedClassname}
+      order-first
       text-white
       bg-green-500
     `} />
@@ -142,14 +141,13 @@ const SearchByNav = ({ navItems, handleOnClickFn, isItemSelectedPredicate }) => 
   }
 
 
-  return <>
+  return <div className="mb-6 md:mb-12">
     <div className="font-bold text-2xl">Search by:</div>
     <div className={`
-    border-solid border-black border-4
-    mb-12 h-fit md:h-16 text-2xl
-    flex flex-col md:flex-row justify-around content-center items-center
-    
-  `}>
+      border-solid border-black border-4
+      h-fit md:h-16 md:text-2xl
+      flex flex-col md:flex-row justify-around content-center items-center  
+    `}>
       {navItems.map(item => {
         return <SearchByNavItem
           key={item.value}
@@ -159,7 +157,7 @@ const SearchByNav = ({ navItems, handleOnClickFn, isItemSelectedPredicate }) => 
         </SearchByNavItem>
       })}
     </div>
-  </>
+  </div>
 
 }
 
@@ -191,7 +189,10 @@ const SearchBy = ({ searchQuery, setSearchInput }) => {
     searchField.value !== item.value && setSearchField(item)
   }
 
-  return <div className="p-12 bg-gray-300 border-solid border-4 border-black rounded-lg min-w-half">
+  return <div className={`
+    bg-gray-300 border-solid border-4 border-black rounded-lg
+      p-4 md:p-12 m-1 w-full md:min-w-half overflow-y-scroll
+  `}>
     <SearchByNav
       navItems={[PHONE, ADDRESS, NAME]}
       isItemSelectedPredicate={item => searchField.value === item.value}
@@ -199,10 +200,13 @@ const SearchBy = ({ searchQuery, setSearchInput }) => {
     />
 
     <div>
-      <searchField.Input {...{ searchQuery, setSearchInput }} />
+      <p className="font-bold text-2xl">{searchField.label}:</p>
+      <div className="bg-white border-solid border-4 border-black mb-6 md:mb-12 p-4">
+        <searchField.Input {...{ searchQuery, setSearchInput }} />
+      </div>
     </div>
 
-    <div>
+    <div className="h-1/2 md:h-4/6 p-2">
       <CustomerList searchQuery={searchQuery} queryField={searchField.queryField} />
     </div>
   </div >
@@ -217,11 +221,11 @@ const App = withProvider(() => {
         <header className=" bg-red-200 text-4xl underline mb-8 pl-4 pt-4">
           Events++
         </header>
-        <main className="bg-grayc flex justify-around h-4/5">
+        <main className="flex justify-around h-5/6">
           <SearchBy {...{ searchQuery, setSearchInput }} />
         </main>
         <footer className=" bg-blue-200 text-xl mt-12 pl-4 pt-4">
-          created using: rails 7 | react + ts | psql | graphql | tailwindcss
+          created by Abel. tools used in project: rails 7 | psql | react + ts | graphql + apollo | tailwindcss
         </footer>
       </div>
     </>

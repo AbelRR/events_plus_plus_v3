@@ -35708,32 +35708,26 @@ const client = new ApolloClient({
     }
   }
 `;
-  function PhoneNumberInput({
-    setSearchInput
-  }) {
-    return /* @__PURE__ */ React5.createElement("div", {
-      className: "px-4"
-    }, "Phone Number:", /* @__PURE__ */ React5.createElement(react_number_format_es_default, {
-      className: "text-black",
-      format: "(###) ###-####",
-      allowEmptyFormatting: true,
-      name: "phone",
-      mask: "_",
-      onChange: (e) => {
-        const { value: maskedValue } = e.target;
-        const plainValue = maskedValue.replace(/\D+/g, "");
-        setSearchInput(plainValue);
-        console.log({ maskedValue, plainValue });
-      },
-      required: true
-    }));
-  }
   var CustomerCard = ({ name, address, phoneNumber }) => {
     return /* @__PURE__ */ React5.createElement("div", {
-      className: "p-4 mb-4 bg-blue-200 text-center max-w-sm rounded-lg"
-    }, /* @__PURE__ */ React5.createElement("div", null, "Name: ", name), /* @__PURE__ */ React5.createElement("div", null, "Phone: ", phoneNumber), /* @__PURE__ */ React5.createElement("div", null, "Address: ", address));
+      className: `
+    flex justify-between md:px-4
+    p-2 md:p-4 mb-2 md:mb-4 w-full text-center 
+    rounded-lg bg-blue-500 font-bold
+  `
+    }, /* @__PURE__ */ React5.createElement("div", {
+      className: "flex-grow"
+    }, /* @__PURE__ */ React5.createElement("div", {
+      className: "text-md md:text-xl"
+    }, "Name: ", name), /* @__PURE__ */ React5.createElement("div", {
+      className: "text-lg md:text-2xl"
+    }, "Phone: ", phoneNumber), /* @__PURE__ */ React5.createElement("div", {
+      className: "text-sm md:text-lg"
+    }, "Address: ", address)), /* @__PURE__ */ React5.createElement("button", {
+      className: "bg-orange-500 p-2 md:p-8 rounded-xl"
+    }, "Select"));
   };
-  function CustomerList({ queryField, searchQuery }) {
+  var CustomerList = ({ queryField, searchQuery }) => {
     const { data: clientData, loading: clientLoading, error: clientError } = useQuery(GET_CLIENTS_BY_SEARCH_FIELD, {
       variables: {
         searchQuery,
@@ -35746,34 +35740,49 @@ const client = new ApolloClient({
     if (!clientData) {
       return /* @__PURE__ */ React5.createElement(React5.Fragment, null, "Loading clients...");
     }
-    return /* @__PURE__ */ React5.createElement("div", null, "Clients found:", clientData.clientsByField.map((c) => {
+    return /* @__PURE__ */ React5.createElement("div", null, clientData.clientsByField.map((c) => {
       return /* @__PURE__ */ React5.createElement(CustomerCard, {
         name: c.name,
         phoneNumber: c.phoneNumber,
         address: c.address
       });
     }));
-  }
+  };
   var PhoneInput = ({ searchQuery, setSearchInput }) => {
-    return /* @__PURE__ */ React5.createElement(PhoneNumberInput, {
-      ...{ searchQuery, setSearchInput }
-    });
+    return /* @__PURE__ */ React5.createElement("div", {
+      className: "px-1"
+    }, /* @__PURE__ */ React5.createElement(react_number_format_es_default, {
+      className: "text-2xl md:text-5xl w-full h-full",
+      format: "(###) ###-####",
+      allowEmptyFormatting: true,
+      name: "phone",
+      mask: "_",
+      onChange: (e) => {
+        const { value: maskedValue } = e.target;
+        const plainValue = maskedValue.replace(/\D+/g, "");
+        setSearchInput(plainValue);
+        console.log({ maskedValue, plainValue });
+      },
+      required: true
+    }));
   };
   var NameInput = ({ searchQuery, setSearchInput }) => {
-    return /* @__PURE__ */ React5.createElement(React5.Fragment, null, "Name:", /* @__PURE__ */ React5.createElement("input", {
+    return /* @__PURE__ */ React5.createElement(React5.Fragment, null, /* @__PURE__ */ React5.createElement("input", {
+      className: "text-2xl md:text-5xl w-full h-full",
       value: searchQuery,
       onChange: (e) => setSearchInput(e.target.value)
     }));
   };
   var AddressInput = ({ searchQuery, setSearchInput }) => {
-    return /* @__PURE__ */ React5.createElement(React5.Fragment, null, "Address:", /* @__PURE__ */ React5.createElement("input", {
+    return /* @__PURE__ */ React5.createElement(React5.Fragment, null, /* @__PURE__ */ React5.createElement("input", {
+      className: "text-2xl md:text-5xl w-full h-full",
       value: searchQuery,
       onChange: (e) => setSearchInput(e.target.value)
     }));
   };
   var SearchByNavItem = ({ handleOnClick, children, selected }) => {
-    const props = { onClick: handleOnClick, children };
-    const sharedClassname = "order-first md:order-none w-full py-3 text-center self-center";
+    const props = { onClick: handleOnClick, children, tabIndex: 0 };
+    const sharedClassname = "md:order-none w-full py-2 md:py-3 text-center self-center";
     const Standard = () => /* @__PURE__ */ React5.createElement("i", {
       ...props,
       className: `
@@ -35785,6 +35794,7 @@ const client = new ApolloClient({
       ...props,
       className: `
       ${sharedClassname}
+      order-first
       text-white
       bg-green-500
     `
@@ -35800,15 +35810,16 @@ const client = new ApolloClient({
       ADDRESS: "Address",
       NAME: "Name"
     };
-    return /* @__PURE__ */ React5.createElement(React5.Fragment, null, /* @__PURE__ */ React5.createElement("div", {
+    return /* @__PURE__ */ React5.createElement("div", {
+      className: "mb-6 md:mb-12"
+    }, /* @__PURE__ */ React5.createElement("div", {
       className: "font-bold text-2xl"
     }, "Search by:"), /* @__PURE__ */ React5.createElement("div", {
       className: `
-    border-solid border-black border-4
-    mb-12 h-fit md:h-16 text-2xl
-    flex flex-col md:flex-row justify-around content-center items-center
-    
-  `
+      border-solid border-black border-4
+      h-fit md:h-16 md:text-2xl
+      flex flex-col md:flex-row justify-around content-center items-center  
+    `
     }, navItems.map((item) => {
       return /* @__PURE__ */ React5.createElement(SearchByNavItem, {
         key: item.value,
@@ -35844,14 +35855,23 @@ const client = new ApolloClient({
       searchField.value !== item.value && setSearchField(item);
     };
     return /* @__PURE__ */ React5.createElement("div", {
-      className: "p-12 bg-gray-300 border-solid border-4 border-black rounded-lg min-w-half"
+      className: `
+    bg-gray-300 border-solid border-4 border-black rounded-lg
+      p-4 md:p-12 m-1 w-full md:min-w-half overflow-y-scroll
+  `
     }, /* @__PURE__ */ React5.createElement(SearchByNav, {
       navItems: [PHONE, ADDRESS, NAME],
       isItemSelectedPredicate: (item) => searchField.value === item.value,
       handleOnClickFn: (item) => setSearchFieldType(item)
-    }), /* @__PURE__ */ React5.createElement("div", null, /* @__PURE__ */ React5.createElement(searchField.Input, {
+    }), /* @__PURE__ */ React5.createElement("div", null, /* @__PURE__ */ React5.createElement("p", {
+      className: "font-bold text-2xl"
+    }, searchField.label, ":"), /* @__PURE__ */ React5.createElement("div", {
+      className: "bg-white border-solid border-4 border-black mb-6 md:mb-12 p-4"
+    }, /* @__PURE__ */ React5.createElement(searchField.Input, {
       ...{ searchQuery, setSearchInput }
-    })), /* @__PURE__ */ React5.createElement("div", null, /* @__PURE__ */ React5.createElement(CustomerList, {
+    }))), /* @__PURE__ */ React5.createElement("div", {
+      className: "h-1/2 md:h-4/6 p-2"
+    }, /* @__PURE__ */ React5.createElement(CustomerList, {
       searchQuery,
       queryField: searchField.queryField
     })));
@@ -35863,12 +35883,12 @@ const client = new ApolloClient({
     }, /* @__PURE__ */ React5.createElement("header", {
       className: " bg-red-200 text-4xl underline mb-8 pl-4 pt-4"
     }, "Events++"), /* @__PURE__ */ React5.createElement("main", {
-      className: "bg-grayc flex justify-around h-4/5"
+      className: "flex justify-around h-5/6"
     }, /* @__PURE__ */ React5.createElement(SearchBy, {
       ...{ searchQuery, setSearchInput }
     })), /* @__PURE__ */ React5.createElement("footer", {
       className: " bg-blue-200 text-xl mt-12 pl-4 pt-4"
-    }, "created using: rails 7 | react + ts | psql | graphql | tailwindcss")));
+    }, "created by Abel. tools used in project: rails 7 | psql | react + ts | graphql + apollo | tailwindcss")));
   });
   import_react_dom.default.render(/* @__PURE__ */ React5.createElement(App, null), document.getElementById("root"));
 })();

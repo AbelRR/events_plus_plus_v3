@@ -642,7 +642,7 @@ module.exports = {
     }),
     minHeight: {
       0: '0px',
-      half: '50%',
+      '1/2': '50%',
       full: '100%',
       screen: '100vh',
       min: 'min-content',
