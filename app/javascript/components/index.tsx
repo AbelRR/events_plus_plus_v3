@@ -44,13 +44,13 @@ const CustomerCard = ({ name, address, phoneNumber }) => {
 const CustomerList = ({ queryField, searchQuery }) => {
   const { data: clientData, loading: clientLoading, error: clientError } = useQuery(GET_CLIENTS_BY_SEARCH_FIELD, {
     variables: {
-      searchQuery: searchQuery,
-      queryField: queryField,
+      searchQuery,
+      queryField,
     },
   })
-  react.useEffect(() => {
-    console.log({ clientData, clientLoading, clientError })
-  })
+  // react.useEffect(() => {
+  //   console.log({ clientData, clientLoading, clientError })
+  // })
 
   // return <>
   //   <CustomerCard name={"Abel Test"} phoneNumber={'5103434956'} address={'568 Juana'} />
@@ -60,7 +60,7 @@ const CustomerList = ({ queryField, searchQuery }) => {
 
   if (!clientData) { return <>Loading clients...</> }
   return (
-    <div>
+    <div className="max-h-full">
       {clientData.clientsByField.map(c => {
         return (
           <CustomerCard name={c.name} phoneNumber={c.phoneNumber} address={c.address} />
@@ -108,7 +108,7 @@ const AddressInput = ({ searchQuery, setSearchInput }) => {
 const SearchByNavItem = ({ handleOnClick, children, selected }) => {
   const props = { onClick: handleOnClick, children, tabIndex: 0 }
 
-  const sharedClassname = 'md:order-none w-full py-2 md:py-3 text-center self-center'
+  const sharedClassname = 'w-full py-2 md:py-3 text-center self-center'
 
   const Standard = () => (
     <i {...props} className={`
@@ -120,7 +120,6 @@ const SearchByNavItem = ({ handleOnClick, children, selected }) => {
   const Selected = () => (
     <i {...props} className={`
       ${sharedClassname}
-      order-first
       text-white
       bg-green-500
     `} />
@@ -191,7 +190,8 @@ const SearchBy = ({ searchQuery, setSearchInput }) => {
 
   return <div className={`
     bg-gray-300 border-solid border-4 border-black rounded-lg
-      p-4 md:p-12 m-1 w-full md:min-w-half overflow-y-scroll
+      p-4 md:p-12 m-1 md:m-12 w-full md:w-1/2 h-full overflow-y-scroll
+      flex-col snap-y
   `}>
     <SearchByNav
       navItems={[PHONE, ADDRESS, NAME]}
@@ -199,14 +199,14 @@ const SearchBy = ({ searchQuery, setSearchInput }) => {
       handleOnClickFn={item => setSearchFieldType(item)}
     />
 
-    <div>
+    <div className="snap-start">
       <p className="font-bold text-2xl">{searchField.label}:</p>
       <div className="bg-white border-solid border-4 border-black mb-6 md:mb-12 p-4">
         <searchField.Input {...{ searchQuery, setSearchInput }} />
       </div>
     </div>
 
-    <div className="h-1/2 md:h-4/6 p-2">
+    <div className="max-h-16 md:h-4/6 p-2">
       <CustomerList searchQuery={searchQuery} queryField={searchField.queryField} />
     </div>
   </div >
@@ -221,10 +221,10 @@ const App = withProvider(() => {
         <header className=" bg-red-200 text-4xl underline mb-8 pl-4 pt-4">
           Events++
         </header>
-        <main className="flex justify-around h-5/6">
+        <main className="flex justify-around h-3/4">
           <SearchBy {...{ searchQuery, setSearchInput }} />
         </main>
-        <footer className=" bg-blue-200 text-xl mt-12 pl-4 pt-4">
+        <footer className=" bg-blue-200 text-xl mt-12 pl-4 pt-4 sticky">
           created by Abel. tools used in project: rails 7 | psql | react + ts | graphql + apollo | tailwindcss
         </footer>
       </div>

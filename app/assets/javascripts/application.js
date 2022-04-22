@@ -1619,7 +1619,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect3(create, deps) {
+          function useEffect2(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -2189,7 +2189,7 @@
           exports.useCallback = useCallback;
           exports.useContext = useContext3;
           exports.useDebugValue = useDebugValue;
-          exports.useEffect = useEffect3;
+          exports.useEffect = useEffect2;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useLayoutEffect = useLayoutEffect;
           exports.useMemo = useMemo2;
@@ -24640,9 +24640,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   };
   customElements.define("turbo-cable-stream-source", TurboCableStreamSourceElement);
 
-  // app/javascript/components/index.tsx
-  var react = __toESM(require_react());
-
   // node_modules/react-number-format/dist/react-number-format.es.js
   var import_react = __toESM(require_react());
   function noop() {
@@ -35734,13 +35731,12 @@ const client = new ApolloClient({
         queryField
       }
     });
-    react.useEffect(() => {
-      console.log({ clientData, clientLoading, clientError });
-    });
     if (!clientData) {
       return /* @__PURE__ */ React5.createElement(React5.Fragment, null, "Loading clients...");
     }
-    return /* @__PURE__ */ React5.createElement("div", null, clientData.clientsByField.map((c) => {
+    return /* @__PURE__ */ React5.createElement("div", {
+      className: "max-h-full"
+    }, clientData.clientsByField.map((c) => {
       return /* @__PURE__ */ React5.createElement(CustomerCard, {
         name: c.name,
         phoneNumber: c.phoneNumber,
@@ -35782,7 +35778,7 @@ const client = new ApolloClient({
   };
   var SearchByNavItem = ({ handleOnClick, children, selected }) => {
     const props = { onClick: handleOnClick, children, tabIndex: 0 };
-    const sharedClassname = "md:order-none w-full py-2 md:py-3 text-center self-center";
+    const sharedClassname = "w-full py-2 md:py-3 text-center self-center";
     const Standard = () => /* @__PURE__ */ React5.createElement("i", {
       ...props,
       className: `
@@ -35794,7 +35790,6 @@ const client = new ApolloClient({
       ...props,
       className: `
       ${sharedClassname}
-      order-first
       text-white
       bg-green-500
     `
@@ -35857,20 +35852,23 @@ const client = new ApolloClient({
     return /* @__PURE__ */ React5.createElement("div", {
       className: `
     bg-gray-300 border-solid border-4 border-black rounded-lg
-      p-4 md:p-12 m-1 w-full md:min-w-half overflow-y-scroll
+      p-4 md:p-12 m-1 md:m-12 w-full md:w-1/2 h-full overflow-y-scroll
+      flex-col snap-y
   `
     }, /* @__PURE__ */ React5.createElement(SearchByNav, {
       navItems: [PHONE, ADDRESS, NAME],
       isItemSelectedPredicate: (item) => searchField.value === item.value,
       handleOnClickFn: (item) => setSearchFieldType(item)
-    }), /* @__PURE__ */ React5.createElement("div", null, /* @__PURE__ */ React5.createElement("p", {
+    }), /* @__PURE__ */ React5.createElement("div", {
+      className: "snap-start"
+    }, /* @__PURE__ */ React5.createElement("p", {
       className: "font-bold text-2xl"
     }, searchField.label, ":"), /* @__PURE__ */ React5.createElement("div", {
       className: "bg-white border-solid border-4 border-black mb-6 md:mb-12 p-4"
     }, /* @__PURE__ */ React5.createElement(searchField.Input, {
       ...{ searchQuery, setSearchInput }
     }))), /* @__PURE__ */ React5.createElement("div", {
-      className: "h-1/2 md:h-4/6 p-2"
+      className: "max-h-16 md:h-4/6 p-2"
     }, /* @__PURE__ */ React5.createElement(CustomerList, {
       searchQuery,
       queryField: searchField.queryField
@@ -35883,11 +35881,11 @@ const client = new ApolloClient({
     }, /* @__PURE__ */ React5.createElement("header", {
       className: " bg-red-200 text-4xl underline mb-8 pl-4 pt-4"
     }, "Events++"), /* @__PURE__ */ React5.createElement("main", {
-      className: "flex justify-around h-5/6"
+      className: "flex justify-around h-3/4"
     }, /* @__PURE__ */ React5.createElement(SearchBy, {
       ...{ searchQuery, setSearchInput }
     })), /* @__PURE__ */ React5.createElement("footer", {
-      className: " bg-blue-200 text-xl mt-12 pl-4 pt-4"
+      className: " bg-blue-200 text-xl mt-12 pl-4 pt-4 sticky"
     }, "created by Abel. tools used in project: rails 7 | psql | react + ts | graphql + apollo | tailwindcss")));
   });
   import_react_dom.default.render(/* @__PURE__ */ React5.createElement(App, null), document.getElementById("root"));
