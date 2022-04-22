@@ -12,13 +12,24 @@ module Types
       User.all
     end
 
-    field :clients_by_phone, [Types::UserType], null: false do
+    field :clients_by_field, [Types::UserType], null: false do
       # Passing arguemts used to identify user
-      argument :partial_phone_number, String, required: false
+      argument :search_field, String, required: false
+      argument :search_input, String, required: false
     end
-    def clients_by_phone(partial_phone_number:)
-      return User.none if partial_phone_number.empty?
-      User.clients.where('phone_number ILIKE ?', "%#{partial_phone_number}%")
+    def clients_by_field(search_input:, search_field:)
+      return User.none if search_input.empty?
+
+      case search_field
+      when 'phone_number'
+        User.clients.where('phone_number ILIKE ?', "%#{search_input}%")
+      when 'address'
+        User.clients.where('address ILIKE ?', "%#{search_input}%")
+      when 'name'
+        User.clients.where('name ILIKE ?', "%#{search_input}%")
+      else
+        return User.none
+      end
     end
 
     field :user, Types::UserType, null: false do
