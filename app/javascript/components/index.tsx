@@ -1,5 +1,6 @@
 import * as react from "react";
 import NumberFormat from 'react-number-format';
+import { useForm, Controller } from 'react-hook-form';
 import '../../../app/assets/stylesheets/application.css'
 import ReactDOM from "react-dom";
 import gql from 'graphql-tag'
@@ -18,11 +19,15 @@ const GET_CLIENTS_BY_SEARCH_FIELD = gql`
   }
 `;
 
-const CustomerCard = ({ name, address, phoneNumber }) => {
+function phoneNumberIsValid(phoneNumber) {
+  return phoneNumber.length === 10;
+}
+
+const CustomerCard = ({ name, address, phoneNumber, dummy }) => {
   return <div className={`
     flex justify-between md:px-4
     p-2 md:p-4 mb-2 md:mb-4 w-full text-center 
-    rounded-lg bg-blue-500 font-bold
+    rounded-lg ${dummy ? 'bg-gray-500' : 'bg-blue-500'} font-bold
   `}>
     <div className="flex-grow">
       <div className="text-md md:text-xl">
@@ -35,7 +40,7 @@ const CustomerCard = ({ name, address, phoneNumber }) => {
         Address: {address}
       </div>
     </div>
-    <button className="bg-orange-500 p-2 md:p-8 rounded-xl">
+    <button disabled={dummy} className={`${dummy ? 'bg-blue-300' : 'bg-orange-500'} p-2 md:p-8 rounded-xl`}>
       Select
     </button>
   </div>
@@ -48,24 +53,25 @@ const CustomerList = ({ queryField, searchQuery }) => {
       queryField,
     },
   })
-  // react.useEffect(() => {
-  //   console.log({ clientData, clientLoading, clientError })
-  // })
 
-  // return <>
-  //   <CustomerCard name={"Abel Test"} phoneNumber={'5103434956'} address={'568 Juana'} />
-  //   <CustomerCard name={"Ana Test"} phoneNumber={'5103434956'} address={'568 Juana'} />
-  //   <CustomerCard name={"Carlos Test"} phoneNumber={'5103434956'} address={'568 Juana'} />
-  // </>
-
-  if (!clientData) { return <>Loading clients...</> }
+  if (clientLoading) {
+    return <div className="mt-4 mb-16">
+      Loading clients...
+    </div>
+  }
   return (
-    <div className="max-h-full">
+    <div>
       {clientData.clientsByField.map(c => {
         return (
-          <CustomerCard name={c.name} phoneNumber={c.phoneNumber} address={c.address} />
+          <CustomerCard name={c.name} phoneNumber={c.phoneNumber} address={c.address} dummy={false} />
         )
       })}
+      {searchQuery.length > 0 &&
+        searchQuery.length < 10 && clientData.clientsByField.length < 6 && [1, 2, 3, 4, 5].map(c => {
+          return (
+            <CustomerCard name={'No user found'} phoneNumber={'123 345 4678'} address={"No address."} dummy={true} />
+          )
+        })}
     </div>
   )
 }
@@ -74,6 +80,7 @@ const PhoneInput = ({ searchQuery, setSearchInput }) => {
   return (
     <div className="px-1">
       <NumberFormat
+        defaultValue={searchQuery}
         className="text-2xl md:text-5xl w-full h-full"
         format="(###) ###-####"
         allowEmptyFormatting
@@ -83,7 +90,6 @@ const PhoneInput = ({ searchQuery, setSearchInput }) => {
           const { value: maskedValue } = e.target;
           const plainValue = maskedValue.replace(/\D+/g, '');
           setSearchInput(plainValue)
-          console.log({ maskedValue, plainValue });
         }}
         required
       />
@@ -102,7 +108,64 @@ const AddressInput = ({ searchQuery, setSearchInput }) => {
   return <>
     <input className="text-2xl md:text-5xl w-full h-full" value={searchQuery} onChange={(e) => setSearchInput(e.target.value)} />
   </>
+}
 
+const InputWrapper = ({ label, children }) => {
+  return <>
+    <p className="font-bold text-2xl">{label}:</p>
+    <div className="bg-white border-solid border-4 border-black mb-4 p-2">
+      {children}
+    </div>
+  </>
+}
+
+const NewCustomer = ({ phoneNumber, setSearchInput }) => {
+  const sharedInputStyling = "text-2xl md:text-5xl w-full h-full";
+  const { control, register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      "Phone Number": phoneNumber,
+      Name: '',
+      Address: '',
+    }
+  });
+
+  const onSubmit = data => console.log({ data });
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <p className="font-bold text-4xl py-6">Add customer</p>
+      <Controller
+        name="Phone Number"
+        control={control}
+        render={({ field }) =>
+          <InputWrapper label='Phone Number'>
+            <NumberFormat
+              className={sharedInputStyling}
+              {...field}
+              format="(###) ###-####"
+              allowEmptyFormatting
+              name="phone"
+              mask="_"
+              required
+              onChange={(e: { target: { value: any; }; }) => {
+                const { value: maskedValue } = e.target;
+                const plainValue = maskedValue.replace(/\D+/g, '');
+                setSearchInput(plainValue)
+              }}
+            />
+          </InputWrapper>
+        }
+      />
+      <InputWrapper label={'Name'}>
+        <input className={sharedInputStyling} type="text" placeholder="Name" {...register("Name", { required: true, maxLength: 80 })} />
+      </InputWrapper>
+      <InputWrapper label={'Address'}>
+        <input className={sharedInputStyling} type="text" placeholder="Address" {...register("Address", {})} />
+      </InputWrapper>
+
+      <input type="submit" className={`bg-orange-500 p-4 w-full border-2 border-black rounded-xl`} value="Add Customer" />
+    </form>
+  );
 }
 
 const SearchByNavItem = ({ handleOnClick, children, selected }) => {
@@ -135,11 +198,6 @@ const SearchByNavItem = ({ handleOnClick, children, selected }) => {
 }
 
 const SearchByNav = ({ navItems, handleOnClickFn, isItemSelectedPredicate }) => {
-  const { PHONE, ADDRESS, NAME } = {
-    PHONE: "Phone", ADDRESS: "Address", NAME: "Name"
-  }
-
-
   return <div className="mb-6 md:mb-12">
     <div className="font-bold text-2xl">Search by:</div>
     <div className={`
@@ -190,7 +248,7 @@ const SearchBy = ({ searchQuery, setSearchInput }) => {
 
   return <div className={`
     bg-gray-300 border-solid border-4 border-black rounded-lg
-      p-4 md:p-12 m-1 md:m-12 w-full md:w-1/2 h-full overflow-y-scroll
+      p-4 md:p-12 m-1 md:m-12 w-full md:w-3/4 h-full overflow-y-scroll
       flex-col snap-y
   `}>
     <SearchByNav
@@ -199,14 +257,19 @@ const SearchBy = ({ searchQuery, setSearchInput }) => {
       handleOnClickFn={item => setSearchFieldType(item)}
     />
 
-    <div className="snap-start">
-      <p className="font-bold text-2xl">{searchField.label}:</p>
-      <div className="bg-white border-solid border-4 border-black mb-6 md:mb-12 p-4">
-        <searchField.Input {...{ searchQuery, setSearchInput }} />
-      </div>
-    </div>
-
-    <div className="max-h-16 md:h-4/6 p-2">
+    <div className="container max-h-16 md:h-4/6 p-2">
+      {searchField.value === PHONE.value && phoneNumberIsValid(searchQuery) ? (
+        <div className="pb-8">
+          <NewCustomer phoneNumber={searchQuery} setSearchInput={setSearchInput} />
+        </div>
+      ) : (
+        <div className="snap-start">
+          <p className="font-bold text-2xl">{searchField.label}:</p>
+          <div className="bg-white border-solid border-4 border-black mb-6 md:mb-12 p-4">
+            <searchField.Input {...{ searchQuery, setSearchInput }} />
+          </div>
+        </div>
+      )}
       <CustomerList searchQuery={searchQuery} queryField={searchField.queryField} />
     </div>
   </div >
